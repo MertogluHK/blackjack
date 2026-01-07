@@ -1,0 +1,62 @@
+# ======================
+# UNITY (CORE)
+# ======================
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+sysinfo.txt
+
+# ======================
+# ANDROID BUILDS
+# ======================
+*.apk
+*.aab
+.gradle/
+.gradle/*
+Android/.gradle/
+Android/.idea/
+Android/local.properties
+
+# Android Studio
+*.iml
+
+# ======================
+# ANDROID NDK / SDK CACHE
+# ======================
+**/Android/Il2CppBuildCache/
+**/Android/Il2CppOutputProject/
+
+# ======================
+# IDE / EDITOR
+# ======================
+.vscode/
+.idea/
+*.csproj
+*.sln
+*.user
+*.pidb
+*.booproj
+*.svd
+
+# ======================
+# DOTNET
+# ======================
+bin/
+obj/
+
+# ======================
+# OS
+# ======================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ======================
+# LOGS
+# ======================
+*.log
