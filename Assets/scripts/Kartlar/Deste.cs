@@ -1,18 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Kart;
 
 public class Deste
 {
     List<Kart> kartlar = new List<Kart>();
 
-    public Deste(int desteSayisi)
+    int desteSayisi;
+    int karistirEsigi; // örn: 100
+
+    public Deste(int desteSayisi, int karistirEsigi = 100)
     {
-        Olustur(desteSayisi);
-        Karistir();
+        this.desteSayisi = desteSayisi;
+        this.karistirEsigi = karistirEsigi;
+
+        YenidenOlusturVeKaristir();
     }
 
-    void Olustur(int desteSayisi)
+    void YenidenOlusturVeKaristir()
     {
         kartlar.Clear();
 
@@ -26,6 +30,9 @@ public class Deste
                 }
             }
         }
+
+        Karistir();
+        Debug.Log($"[DESTE] Yeni deste olusturuldu: {desteSayisi} deste, toplam {kartlar.Count} kart.");
     }
 
     void Karistir()
@@ -39,6 +46,14 @@ public class Deste
 
     public Kart KartCek()
     {
+        // Kart çekmeden önce eşiği kontrol et:
+        // (<= 100 ise yeni 4 destelik shoe oluştur ve karıştır)
+        if (kartlar.Count <= karistirEsigi)
+        {
+            Debug.Log($"[DESTE] Kart sayisi {kartlar.Count} (esik {karistirEsigi}). Yeniden karistiriliyor...");
+            YenidenOlusturVeKaristir();
+        }
+
         Kart kart = kartlar[0];
         kartlar.RemoveAt(0);
         return kart;

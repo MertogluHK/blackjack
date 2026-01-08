@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\kursa\\blackjack\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\2d cards game art pack\\demo\\read me.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\2d cards game art pack\\demo\\read me.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\oyun\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyun\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\kursa\\blackjack\\Assets\\scripts\\desteOlustur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\scripts\\desteOlustur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\anamen\u00FC.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\anamen\u00FC.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\oyundevam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyundevam.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\kart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\kart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\oyunukapat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyunukapat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\oyundurdur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyundurdur.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\oyunekraniac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyunekraniac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,97 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "READ ME.txt",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\2D Cards Game Art Pack\\Demo\\READ ME.txt",
-              "RelativeDocumentMoniker": "Assets\\2D Cards Game Art Pack\\Demo\\READ ME.txt",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\2D Cards Game Art Pack\\Demo\\READ ME.txt",
-              "RelativeToolTip": "Assets\\2D Cards Game Art Pack\\Demo\\READ ME.txt",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2026-01-07T13:23:06.389Z",
+              "DocumentIndex": 4,
+              "Title": "PlayerCardImage.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
+              "RelativeToolTip": "Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T19:58:26.208Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "anamen\u00FC.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\anamen\u00FC.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\anamen\u00FC.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\anamen\u00FC.cs",
-              "RelativeToolTip": "Assets\\scripts\\anamen\u00FC.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAoAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\oyun\\GameManager.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
+              "RelativeToolTip": "Assets\\scripts\\oyun\\GameManager.cs",
+              "ViewState": "AgIAAIUAAAAAAAAAAADwv50AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-30T14:39:00.582Z",
+              "WhenOpened": "2026-01-07T15:47:11.93Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "oyundevam.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyundevam.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\oyundevam.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyundevam.cs",
-              "RelativeToolTip": "Assets\\scripts\\oyundevam.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "Kart.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Kart.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\Kart.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Kart.cs",
+              "RelativeToolTip": "Assets\\scripts\\Kartlar\\Kart.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-30T14:28:14.357Z",
+              "WhenOpened": "2026-01-07T15:44:18.512Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "oyunukapat.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyunukapat.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\oyunukapat.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyunukapat.cs",
-              "RelativeToolTip": "Assets\\scripts\\oyunukapat.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Deste.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Deste.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\Deste.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Deste.cs",
+              "RelativeToolTip": "Assets\\scripts\\Kartlar\\Deste.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-30T14:27:57.925Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "oyundurdur.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyundurdur.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\oyundurdur.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyundurdur.cs",
-              "RelativeToolTip": "Assets\\scripts\\oyundurdur.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-30T14:09:59.874Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "oyunekraniAc.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyunekraniAc.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\oyunekraniAc.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyunekraniAc.cs",
-              "RelativeToolTip": "Assets\\scripts\\oyunekraniAc.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-30T14:06:18.845Z",
+              "WhenOpened": "2026-01-07T15:43:36.875Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "desteOlustur.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\desteOlustur.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\desteOlustur.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\desteOlustur.cs",
-              "RelativeToolTip": "Assets\\scripts\\desteOlustur.cs",
-              "ViewState": "AgIAAGMAAAAAAAAAAAAowHQAAAAXAAAAAAAAAA==",
+              "Title": "El.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\El.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\El.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\El.cs",
+              "RelativeToolTip": "Assets\\scripts\\Kartlar\\El.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAYwCYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-07T13:16:01.7Z",
+              "WhenOpened": "2026-01-07T15:43:58.327Z",
               "EditorCaption": ""
             }
           ]

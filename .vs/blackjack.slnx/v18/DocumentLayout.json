@@ -7,20 +7,20 @@
       "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\oyun\\gamemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\kart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\kart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\playercardimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\deste.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|c:\\users\\kursa\\blackjack\\assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CD19DA-EE08-5225-FB19-1D0DFA4113DD}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\kartlar\\el.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +30,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "PlayerCardImage.cs",
               "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
               "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\PlayerCardImage.cs",
@@ -47,20 +47,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "GameManager.cs",
-              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
-              "RelativeDocumentMoniker": "Assets\\scripts\\oyun\\GameManager.cs",
-              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
-              "RelativeToolTip": "Assets\\scripts\\oyun\\GameManager.cs",
-              "ViewState": "AgIAAIUAAAAAAAAAAADwv50AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-07T15:47:11.93Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Kart.cs",
               "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Kart.cs",
               "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\Kart.cs",
@@ -73,28 +60,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Deste.cs",
               "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Deste.cs",
               "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\Deste.cs",
               "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\Deste.cs",
               "RelativeToolTip": "Assets\\scripts\\Kartlar\\Deste.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAAAgwAgAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T15:43:36.875Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "El.cs",
               "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\El.cs",
               "RelativeDocumentMoniker": "Assets\\scripts\\Kartlar\\El.cs",
               "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\Kartlar\\El.cs",
               "RelativeToolTip": "Assets\\scripts\\Kartlar\\El.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAYwCYAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-07T15:43:58.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameManager.cs",
+              "DocumentMoniker": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
+              "RelativeDocumentMoniker": "Assets\\scripts\\oyun\\GameManager.cs",
+              "ToolTip": "C:\\Users\\kursa\\blackjack\\Assets\\scripts\\oyun\\GameManager.cs",
+              "RelativeToolTip": "Assets\\scripts\\oyun\\GameManager.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAAQwGgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-07T23:16:50.227Z",
               "EditorCaption": ""
             }
           ]

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -5,8 +6,11 @@ public class GameManager : MonoBehaviour
     public GameObject hitbtn;
     public GameObject standbtn;
 
-    Deste deste;
+    public GameObject pwinbtn;
+    public GameObject dwinbtn;
+    public GameObject drawbtn;
 
+    Deste deste;
     El playerEl;
     El dealerEl;
 
@@ -14,13 +18,23 @@ public class GameManager : MonoBehaviour
     public Transform dealerCardsParent;   // DealerCards
     public GameObject cardPrefab;         // CardPrefab
 
-    void Start()
-    {
-        YeniElBaslat();
-    }
+    // Akış kilidi (spam click engeller)
+    bool elDevamEdiyor = false;
 
-    void YeniElBaslat()
+    [Header("Timings")]
+    public float kartCekmeGecikmesi = 0.25f;
+    public float elSonuBekleme = 1.5f;
+
+    public void YeniElBaslat()
     {
+        // Yeni elde tekrar kontrol
+        StopAllCoroutines();
+        elDevamEdiyor = true;
+
+        pwinbtn.SetActive(false);
+        dwinbtn.SetActive(false);
+        drawbtn.SetActive(false);
+
         deste = new Deste(4);
         playerEl = new El();
         dealerEl = new El();
@@ -28,32 +42,52 @@ public class GameManager : MonoBehaviour
         Temizle(playerCardsParent);
         Temizle(dealerCardsParent);
 
-        // Ba�lang��: oyuncu 2, dealer 2
-        OyuncuyaKartVer();
-        DealerKartVer();
-        OyuncuyaKartVer();
-        DealerKartVer();
-
         hitbtn.SetActive(true);
         standbtn.SetActive(true);
+
+        // Başlangıç dağıtımı coroutine ile (görsel akış)
+        StartCoroutine(BaslangicDagitimi());
+    }
+
+    IEnumerator BaslangicDagitimi()
+    {
+        OyuncuyaKartVer();
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        DealerKartVer();
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        OyuncuyaKartVer();
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        DealerKartVer();
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
 
         int p = playerEl.Skor();
         int d = dealerEl.Skor();
 
         if (p == 21 || d == 21)
         {
-            hitbtn.SetActive(false);
-            standbtn.SetActive(false);
+            KilitleButonlar();
 
             if (p == 21 && d == 21) Debug.Log("BERABERE (Ikisi de Blackjack)");
             else if (p == 21) Debug.Log("KAZANDIN (Blackjack!)");
             else Debug.Log("KAYBETTIN (Dealer Blackjack)");
 
-            return;
+            yield return new WaitForSeconds(elSonuBekleme);
+            YeniElBaslat();
+            yield break;
         }
 
-        Debug.Log("Oyuncu skor: " + playerEl.Skor());
-        Debug.Log("Dealer skor: " + dealerEl.Skor());
+        Debug.Log("Oyuncu skor: " + p);
+        Debug.Log("Dealer skor: " + d);
+    }
+
+    void KilitleButonlar()
+    {
+        hitbtn.SetActive(false);
+        standbtn.SetActive(false);
+        elDevamEdiyor = false;
     }
 
     void Temizle(Transform parent)
@@ -65,26 +99,9 @@ public class GameManager : MonoBehaviour
 
     void KartGoster(Transform parent, Kart kart)
     {
-        if (cardPrefab == null)
-        {
-            Debug.LogError("cardPrefab BOS! Inspector'dan CardPrefab ata.");
-            return;
-        }
-
-        if (parent == null)
-        {
-            Debug.LogError("Kart parent BOS! Inspector'dan PlayerCards/DealerCards ata.");
-            return;
-        }
-
         GameObject obj = Instantiate(cardPrefab, parent);
 
         var view = obj.GetComponent<PlayerCardImage>();
-        if (view == null)
-        {
-            Debug.LogError("CardPrefab ustunde PlayerCardImage script'i YOK!");
-            return;
-        }
 
         view.Goster(kart);
     }
@@ -94,7 +111,6 @@ public class GameManager : MonoBehaviour
         Kart k = deste.KartCek();
         playerEl.Ekle(k);
         KartGoster(playerCardsParent, k);
-
     }
 
     void DealerKartVer()
@@ -104,56 +120,88 @@ public class GameManager : MonoBehaviour
         KartGoster(dealerCardsParent, k);
     }
 
-    // HIT button -> bunu ba�la
+    // HIT button
     public void Hit()
     {
+        if (!elDevamEdiyor) return;
+
         OyuncuyaKartVer();
+
         int p = playerEl.Skor();
+
         if (p > 21)
         {
-            hitbtn.SetActive(false);
-            standbtn.SetActive(false);
-            Debug.Log("KAYBETTIN (Bust)");
-            YeniElBaslat();
+            StartCoroutine(ElBitirVeYenile("KAYBETTIN (Bust)"));
         }
         else if (p == 21)
         {
-            Stand(); // otomatik stand (istersen)
+            // otomatik stand
+            Stand();
         }
     }
 
-    // STAND button -> bunu ba�la
+    // STAND button
     public void Stand()
     {
-        hitbtn.SetActive(false);
-        standbtn.SetActive(false);
+        if (!elDevamEdiyor) return;
 
-        // Dealer 17'ye kadar �eker
-        while (dealerEl.Skor() < 17)
-            DealerKartVer();
-
-        SonucuBelirle();
+        KilitleButonlar();
+        StartCoroutine(DealerOynasinVeSonuc());
     }
 
-    void SonucuBelirle()
+    IEnumerator DealerOynasinVeSonuc()
     {
+        // Dealer 17'ye kadar çeker (kartlar aralıklı görünsün)
+        while (dealerEl.Skor() < 17)
+        {
+            DealerKartVer();
+            yield return new WaitForSeconds(kartCekmeGecikmesi);
+        }
+
+        // Sonucu yazdır
         int p = playerEl.Skor();
         int d = dealerEl.Skor();
 
         Debug.Log("Oyuncu: " + p + " | Dealer: " + d);
 
-        if (p > 21) 
-        { 
-            hitbtn.SetActive(false);
-            standbtn.SetActive(false);
-            Debug.Log("KAYBETTIN (Bust)"); 
-            return; 
+        string mesaj;
+        if (p > 21)
+        {
+            mesaj = "KAYBETTIN (Bust)";
+            dwinbtn.SetActive(true);
+        } 
+        else if (d > 21)
+        {
+            mesaj = "KAZANDIN (Dealer bust)";
+            pwinbtn.SetActive(true);
         }
-        if (d > 21) { Debug.Log("KAZANDIN (Dealer bust)"); return; }
+        else if (p > d)
+        {
+            mesaj = "KAZANDIN";
+            pwinbtn.SetActive(true);
+        }
+        else if (p < d)
+        {
+            mesaj = "KAYBETTIN";
+            dwinbtn.SetActive(true);
+        }
+        else
+        {
+            mesaj = "BERABERE (Push)";
+            drawbtn.SetActive(true);
+        }
 
-        if (p > d) Debug.Log("KAZANDIN");
-        else if (p < d) Debug.Log("KAYBETTIN");
-        else Debug.Log("BERABERE (Push)");
+        Debug.Log(mesaj);
+
+        yield return new WaitForSeconds(elSonuBekleme);
+        YeniElBaslat();
+    }
+
+    IEnumerator ElBitirVeYenile(string mesaj)
+    {
+        KilitleButonlar();
+        Debug.Log(mesaj);
+        yield return new WaitForSeconds(elSonuBekleme);
         YeniElBaslat();
     }
 }
