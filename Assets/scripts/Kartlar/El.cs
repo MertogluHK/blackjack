@@ -4,36 +4,25 @@ public class El
 {
     public List<Kart> kartlar = new List<Kart>();
 
-    public void Ekle(Kart k)
-    {
-        kartlar.Add(k);
-    }
+    public void Ekle(Kart k) => kartlar.Add(k);
 
     public int Skor()
     {
         int skor = 0;
-        int asSayisi = 0;
+        int aceCount = 0;
 
         foreach (var k in kartlar)
         {
-            int v = Deger(k);
-            skor += v;
-            if (k.Rank == KartRank.As) asSayisi++;
+            skor += k.Deger;
+            if (k.Rank == CardRank.Ace) aceCount++;
         }
 
-        while (skor > 21 && asSayisi > 0)
+        while (skor > 21 && aceCount > 0)
         {
             skor -= 10;
-            asSayisi--;
+            aceCount--;
         }
 
         return skor;
-    }
-
-    int Deger(Kart k)
-    {
-        if (k.Rank == KartRank.As) return 11;
-        if (k.Rank == KartRank.Vale || k.Rank == KartRank.Kiz || k.Rank == KartRank.Papaz) return 10;
-        return (int)k.Rank + 2;
     }
 }

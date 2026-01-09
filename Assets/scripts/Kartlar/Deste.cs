@@ -5,37 +5,36 @@ public class Deste
 {
     List<Kart> kartlar = new List<Kart>();
 
-    int desteSayisi;
-    int karistirEsigi; // örn: 100
+    int deckCount;
+    int shuffleThreshold;
 
-    public Deste(int desteSayisi, int karistirEsigi = 100)
+    public Deste(int deckCount, int shuffleThreshold = 100)
     {
-        this.desteSayisi = desteSayisi;
-        this.karistirEsigi = karistirEsigi;
-
-        YenidenOlusturVeKaristir();
+        this.deckCount = deckCount;
+        this.shuffleThreshold = shuffleThreshold;
+        RebuildAndShuffle();
     }
 
-    void YenidenOlusturVeKaristir()
+    void RebuildAndShuffle()
     {
         kartlar.Clear();
 
-        for (int i = 0; i < desteSayisi; i++)
+        for (int i = 0; i < deckCount; i++)
         {
-            foreach (KartTur tur in System.Enum.GetValues(typeof(KartTur)))
+            foreach (CardSuit suit in System.Enum.GetValues(typeof(CardSuit)))
             {
-                foreach (KartRank rank in System.Enum.GetValues(typeof(KartRank)))
+                foreach (CardRank rank in System.Enum.GetValues(typeof(CardRank)))
                 {
-                    kartlar.Add(new Kart(rank, tur));
+                    kartlar.Add(new Kart(rank, suit));
                 }
             }
         }
 
-        Karistir();
-        Debug.Log($"[DESTE] Yeni deste olusturuldu: {desteSayisi} deste, toplam {kartlar.Count} kart.");
+        Shuffle();
+        Debug.Log($"[DECK] {deckCount} decks, {kartlar.Count} cards.");
     }
 
-    void Karistir()
+    void Shuffle()
     {
         for (int i = 0; i < kartlar.Count; i++)
         {
@@ -44,20 +43,13 @@ public class Deste
         }
     }
 
-    public Kart KartCek()
+    public Kart Draw()
     {
-        // Kart çekmeden önce eşiği kontrol et:
-        // (<= 100 ise yeni 4 destelik shoe oluştur ve karıştır)
-        if (kartlar.Count <= karistirEsigi)
-        {
-            Debug.Log($"[DESTE] Kart sayisi {kartlar.Count} (esik {karistirEsigi}). Yeniden karistiriliyor...");
-            YenidenOlusturVeKaristir();
-        }
+        if (kartlar.Count <= shuffleThreshold)
+            RebuildAndShuffle();
 
-        Kart kart = kartlar[0];
+        Kart k = kartlar[0];
         kartlar.RemoveAt(0);
-        return kart;
+        return k;
     }
-
-    public int KalanKart() => kartlar.Count;
 }

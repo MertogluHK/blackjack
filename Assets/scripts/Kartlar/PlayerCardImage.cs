@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerCardImage : MonoBehaviour
@@ -7,12 +7,12 @@ public class PlayerCardImage : MonoBehaviour
 
     public void Goster(Kart kart)
     {
-        string spriteAdi = kart.Rank + "_" + kart.Tur;
-        Sprite sprite = Resources.Load<Sprite>("Cards/" + spriteAdi);
+        string spriteName = $"{kart.Rank}_{kart.Suit}";
+        Sprite sprite = Resources.Load<Sprite>($"Cards/{spriteName}");
 
         if (sprite == null)
         {
-            Debug.LogError("Sprite bulunamadý: " + spriteAdi);
+            Debug.LogError("Missing sprite: " + spriteName);
             return;
         }
 

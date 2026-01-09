@@ -9,7 +9,7 @@ namespace TMPro.Examples
     {
 
         private TextMeshPro m_textMeshPro;
-        //private TMP_FontAsset m_FontAsset;
+        //private TMP_FontAsset m_Fontasset;
 
         private const string label = "The <#0050FF>count is: </color>{0:2}";
         private float m_frame;
@@ -22,11 +22,11 @@ namespace TMPro.Examples
 
             m_textMeshPro.autoSizeTextContainer = true;
 
-            // Load the Font Asset to be used.
-            //m_FontAsset = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
-            //m_textMeshPro.font = m_FontAsset;
+            // Load the Font asset to be used.
+            //m_Fontasset = Resources.Load("Fonts & Materials/LiberationSans SDF", typeof(TMP_FontAsset)) as TMP_FontAsset;
+            //m_textMeshPro.font = m_Fontasset;
 
-            // Assign Material to TextMesh Pro Component
+            // assign Material to TextMesh Pro Component
             //m_textMeshPro.fontSharedMaterial = Resources.Load("Fonts & Materials/LiberationSans SDF - Bevel", typeof(Material)) as Material;
             //m_textMeshPro.fontSharedMaterial.EnableKeyword("BEVEL_ON");
 

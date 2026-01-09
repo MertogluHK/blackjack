@@ -3,204 +3,373 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject hitbtn;
-    public GameObject standbtn;
+    [Header("Refs")]
+    public UIController ui;
+    public CardPresenter presenter;
 
-    public GameObject pwinbtn;
-    public GameObject dwinbtn;
-    public GameObject drawbtn;
-
-    Deste deste;
-    El playerEl;
-    El dealerEl;
-
-    public Transform playerCardsParent;   // PlayerCards
-    public Transform dealerCardsParent;   // DealerCards
-    public GameObject cardPrefab;         // CardPrefab
-
-    // Akış kilidi (spam click engeller)
-    bool elDevamEdiyor = false;
+    [Header("Round Settings")]
+    public int desteSayisi = 4;
+    public int karistirEsigi = 100;
+    public int baseBet = 10;
 
     [Header("Timings")]
     public float kartCekmeGecikmesi = 0.25f;
     public float elSonuBekleme = 1.5f;
 
+    [Header("Dealer Rules")]
+    public bool dealerHitsSoft17 = false;
+
+    // =========================
+    // Layout / Parent refs
+    // =========================
+    [Header("Player Hands Parent (PlayerCards)")]
+    [SerializeField] private Transform playerHandAreasParent; // PlayerCards (RectTransform)
+
+    [Header("Split Positioning")]
+    [SerializeField] private float handStepX = 170f;     // new hand target = (170 * child_i, 0)
+    [SerializeField] private float parentShiftX = 85f;   // parentX = parentX - 85
+    [SerializeField] private float parentFixedY = -440f; // parentY = -440
+
+    [Header("Card Spacing (Centering)")]
+    [SerializeField] private float firstWidth = 100f; // centerX = (100 + (n-1)*45)/2
+    [SerializeField] private float step = 45f;
+
+    BlackjackRound round;
+    DealerAI dealerAI = new DealerAI();
+
+    RoundState state = RoundState.Idle;
+    bool inputLocked = false;
+
+    // =========================
+    // UI helpers
+    // =========================
+    void SetActionButtons(bool hit, bool stand, bool split, bool dbl)
+    {
+        if (!ui) return;
+
+        if (ui.hitbtn) ui.hitbtn.SetActive(hit);
+        if (ui.standbtn) ui.standbtn.SetActive(stand);
+        if (ui.splitbtn) ui.splitbtn.SetActive(split);
+        if (ui.doublebtn) ui.doublebtn.SetActive(dbl);
+    }
+
+    void RefreshButtons()
+    {
+        if (!ui || round == null || inputLocked || state != RoundState.PlayerTurn)
+        {
+            SetActionButtons(false, false, false, false);
+            return;
+        }
+
+        int h = round.activeHandIndex;
+
+        if (round.IsHandDone(h))
+        {
+            SetActionButtons(false, false, false, false);
+            return;
+        }
+
+        int score = round.playerHands[h].Skor();
+
+        SetActionButtons(
+            score < 21,
+            true,
+            round.CanSplit(h),
+            round.CanDoubleDown(h)
+        );
+    }
+
+    void LockActions()
+    {
+        inputLocked = true;
+        state = RoundState.Idle;
+        SetActionButtons(false, false, false, false);
+    }
+
+    // =========================
+    // Parent / Hand positioning helpers
+    // =========================
+    float GetParentX()
+    {
+        if (!playerHandAreasParent) return 0f;
+
+        if (playerHandAreasParent is RectTransform prt)
+            return prt.anchoredPosition.x;
+
+        return playerHandAreasParent.localPosition.x;
+    }
+
+    void SetParentPos(float x, float y)
+    {
+        if (!playerHandAreasParent) return;
+
+        if (playerHandAreasParent is RectTransform prt)
+        {
+            prt.anchoredPosition = new Vector2(x, y);
+        }
+        else
+        {
+            var p = playerHandAreasParent.localPosition;
+            playerHandAreasParent.localPosition = new Vector3(x, y, p.z);
+        }
+    }
+
+    // Hand_i pozisyonunu root (PlayerCards) local uzayında ayarlar
+    void SetHandLocalPos(int handIndex, Vector2 localPos)
+    {
+        if (!playerHandAreasParent) return;
+        if (handIndex < 0 || handIndex >= playerHandAreasParent.childCount) return;
+
+        Transform hand = playerHandAreasParent.GetChild(handIndex);
+
+        if (hand is RectTransform rt)
+            rt.anchoredPosition = localPos;
+        else
+            hand.localPosition = new Vector3(localPos.x, localPos.y, hand.localPosition.z);
+    }
+
+    // =========================
+    // Card Layout (center inside a hand)
+    // centerX = (100 + (n-1)*45) / 2
+    // =========================
+    void RepositionPlayerHandCards(int handIndex)
+    {
+        if (!playerHandAreasParent) return;
+        if (handIndex < 0 || handIndex >= playerHandAreasParent.childCount) return;
+
+        RectTransform handArea = playerHandAreasParent.GetChild(handIndex) as RectTransform;
+        if (!handArea) return;
+
+        int n = handArea.childCount;
+        if (n < 2) return;
+
+        float centerX = (firstWidth + (n - 1) * step) / 2f;
+
+        for (int i = 0; i < n; i++)
+        {
+            RectTransform cardRt = handArea.GetChild(i) as RectTransform;
+            if (!cardRt) continue;
+
+            float x = (i * step) - centerX;
+            cardRt.anchoredPosition = new Vector2(x, cardRt.anchoredPosition.y);
+        }
+    }
+
+    // =========================
+    // Public (UI Buttons)
+    // =========================
     public void YeniElBaslat()
     {
-        // Yeni elde tekrar kontrol
         StopAllCoroutines();
-        elDevamEdiyor = true;
 
-        pwinbtn.SetActive(false);
-        dwinbtn.SetActive(false);
-        drawbtn.SetActive(false);
+        round = new BlackjackRound(desteSayisi, karistirEsigi, baseBet);
+        state = RoundState.Dealing;
+        inputLocked = true;
 
-        deste = new Deste(4);
-        playerEl = new El();
-        dealerEl = new El();
+        if (ui)
+        {
+            ui.HideResults();
+            SetActionButtons(false, false, false, false);
+        }
 
-        Temizle(playerCardsParent);
-        Temizle(dealerCardsParent);
+        if (presenter) presenter.ClearAll();
 
-        hitbtn.SetActive(true);
-        standbtn.SetActive(true);
+        // Başlangıçta 1 hand oluştur
+        if (presenter) presenter.EnsurePlayerHandAreas(1);
 
-        // Başlangıç dağıtımı coroutine ile (görsel akış)
+        // Root'u Y=-440'a sabitle (X aynı kalsın)
+        SetParentPos(GetParentX(), parentFixedY);
+
+        // Hand_0'ı (0,0)'a al (lokal)
+        SetHandLocalPos(0, Vector2.zero);
+
         StartCoroutine(BaslangicDagitimi());
     }
 
-    IEnumerator BaslangicDagitimi()
-    {
-        OyuncuyaKartVer();
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        DealerKartVer();
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        OyuncuyaKartVer();
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        DealerKartVer();
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        int p = playerEl.Skor();
-        int d = dealerEl.Skor();
-
-        if (p == 21 || d == 21)
-        {
-            KilitleButonlar();
-
-            if (p == 21 && d == 21) Debug.Log("BERABERE (Ikisi de Blackjack)");
-            else if (p == 21) Debug.Log("KAZANDIN (Blackjack!)");
-            else Debug.Log("KAYBETTIN (Dealer Blackjack)");
-
-            yield return new WaitForSeconds(elSonuBekleme);
-            YeniElBaslat();
-            yield break;
-        }
-
-        Debug.Log("Oyuncu skor: " + p);
-        Debug.Log("Dealer skor: " + d);
-    }
-
-    void KilitleButonlar()
-    {
-        hitbtn.SetActive(false);
-        standbtn.SetActive(false);
-        elDevamEdiyor = false;
-    }
-
-    void Temizle(Transform parent)
-    {
-        if (parent == null) return;
-        for (int i = parent.childCount - 1; i >= 0; i--)
-            Destroy(parent.GetChild(i).gameObject);
-    }
-
-    void KartGoster(Transform parent, Kart kart)
-    {
-        GameObject obj = Instantiate(cardPrefab, parent);
-
-        var view = obj.GetComponent<PlayerCardImage>();
-
-        view.Goster(kart);
-    }
-
-    void OyuncuyaKartVer()
-    {
-        Kart k = deste.KartCek();
-        playerEl.Ekle(k);
-        KartGoster(playerCardsParent, k);
-    }
-
-    void DealerKartVer()
-    {
-        Kart k = deste.KartCek();
-        dealerEl.Ekle(k);
-        KartGoster(dealerCardsParent, k);
-    }
-
-    // HIT button
     public void Hit()
     {
-        if (!elDevamEdiyor) return;
+        if (inputLocked || state != RoundState.PlayerTurn) return;
 
-        OyuncuyaKartVer();
+        int h = round.activeHandIndex;
 
-        int p = playerEl.Skor();
+        var card = round.Hit(h);
+        presenter.ShowPlayerCard(h, card);
+
+        RepositionPlayerHandCards(h);
+
+        int p = round.playerHands[h].Skor();
 
         if (p > 21)
         {
-            StartCoroutine(ElBitirVeYenile("KAYBETTIN (Bust)"));
+            round.Stand(h);
+            AdvanceOrDealer();
+            return;
         }
-        else if (p == 21)
+
+        if (p == 21)
         {
-            // otomatik stand
             Stand();
+            return;
         }
+
+        RefreshButtons();
     }
 
-    // STAND button
     public void Stand()
     {
-        if (!elDevamEdiyor) return;
+        if (inputLocked || state != RoundState.PlayerTurn) return;
 
-        KilitleButonlar();
+        int h = round.activeHandIndex;
+        round.Stand(h);
+
+        AdvanceOrDealer();
+    }
+
+    public void DoubleDown()
+    {
+        if (inputLocked || state != RoundState.PlayerTurn) return;
+
+        int h = round.activeHandIndex;
+        if (!round.CanDoubleDown(h)) return;
+
+        var card = round.DoubleDown(h);
+        presenter.ShowPlayerCard(h, card);
+
+        // Double sonrası otomatik stand
+        Stand();
+    }
+
+    // =========================
+    // SPLIT (istediğin sıra birebir)
+    // 1) yeni child hedefi (170 * child_i, 0)
+    // 2) parent -> (parentX - 85, -440)
+    // 3) Ensure ile child oluştur, sonra hedefe koy
+    // =========================
+    public void Split()
+    {
+        if (inputLocked || state != RoundState.PlayerTurn) return;
+
+        int h = round.activeHandIndex;
+        if (!round.CanSplit(h)) return;
+
+        if (!round.Split(h)) return;
+
+        inputLocked = true;
+        RefreshButtons();
+
+        // 1) yeni child index ve hedef pozisyon
+        int newHandIndex = round.playerHands.Count - 1;
+        Vector2 newHandTargetLocal = new Vector2(handStepX * newHandIndex, 0f);
+
+        // 2) parent'ı (parentX - 85, -440) konumuna götür
+        float parentX = GetParentX();
+        SetParentPos(parentX - parentShiftX, parentFixedY);
+
+        // 3) child'ı oluştur (Ensure) ve hedefe yerleştir
+        presenter.EnsurePlayerHandAreas(round.playerHands.Count);
+
+        // yeni hand'ı hedef konuma koy
+        SetHandLocalPos(newHandIndex, newHandTargetLocal);
+
+        // Hand_0'ı garantiye al
+        if (newHandIndex == 1)
+            SetHandLocalPos(0, Vector2.zero);
+
+        // redraw
+        presenter.RenderAllPlayerHands(round);
+
+        // (Güvence) Eğer presenter redraw sırasında hand pos resetliyorsa, tekrar set et:
+        SetHandLocalPos(newHandIndex, newHandTargetLocal);
+        if (newHandIndex == 1) SetHandLocalPos(0, Vector2.zero);
+
+        // split kuralı: her ele 1 kart
+        StartCoroutine(SplitDealOneEach(h));
+    }
+
+    // =========================
+    // Flow
+    // =========================
+    IEnumerator BaslangicDagitimi()
+    {
+        // Player 1
+        presenter.ShowPlayerCard(0, round.DealToPlayer(0));
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Dealer 1
+        presenter.ShowDealerCard(round.DealToDealer());
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Player 2
+        presenter.ShowPlayerCard(0, round.DealToPlayer(0));
+
+        // gecikmesiz ortala
+        RepositionPlayerHandCards(0);
+
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Dealer 2
+        presenter.ShowDealerCard(round.DealToDealer());
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        state = RoundState.PlayerTurn;
+        inputLocked = false;
+
+        RefreshButtons();
+    }
+
+    IEnumerator SplitDealOneEach(int splitIndex)
+    {
+        // İlk ele 1 kart
+        var c1 = round.DealToPlayer(splitIndex);
+        presenter.ShowPlayerCard(splitIndex, c1);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // İkinci ele 1 kart
+        var c2 = round.DealToPlayer(splitIndex + 1);
+        presenter.ShowPlayerCard(splitIndex + 1, c2);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // iki eli de ortala
+        RepositionPlayerHandCards(splitIndex);
+        RepositionPlayerHandCards(splitIndex + 1);
+
+        round.SetActiveHand(splitIndex);
+
+        state = RoundState.PlayerTurn;
+        inputLocked = false;
+
+        RefreshButtons();
+    }
+
+    void AdvanceOrDealer()
+    {
+        if (round.MoveToNextPlayableHand())
+        {
+            inputLocked = false;
+            state = RoundState.PlayerTurn;
+            RefreshButtons();
+            return;
+        }
+
+        inputLocked = true;
+        state = RoundState.DealerTurn;
+        RefreshButtons();
+
         StartCoroutine(DealerOynasinVeSonuc());
     }
 
     IEnumerator DealerOynasinVeSonuc()
     {
-        // Dealer 17'ye kadar çeker (kartlar aralıklı görünsün)
-        while (dealerEl.Skor() < 17)
+        while (dealerAI.ShouldHit(round.dealerHand, dealerHitsSoft17))
         {
-            DealerKartVer();
+            var c = round.DealToDealer();
+            presenter.ShowDealerCard(c);
             yield return new WaitForSeconds(kartCekmeGecikmesi);
         }
 
-        // Sonucu yazdır
-        int p = playerEl.Skor();
-        int d = dealerEl.Skor();
+        var res = round.ResolveHand(0);
+        if (ui) ui.ShowOutcome(res.outcome);
 
-        Debug.Log("Oyuncu: " + p + " | Dealer: " + d);
-
-        string mesaj;
-        if (p > 21)
-        {
-            mesaj = "KAYBETTIN (Bust)";
-            dwinbtn.SetActive(true);
-        } 
-        else if (d > 21)
-        {
-            mesaj = "KAZANDIN (Dealer bust)";
-            pwinbtn.SetActive(true);
-        }
-        else if (p > d)
-        {
-            mesaj = "KAZANDIN";
-            pwinbtn.SetActive(true);
-        }
-        else if (p < d)
-        {
-            mesaj = "KAYBETTIN";
-            dwinbtn.SetActive(true);
-        }
-        else
-        {
-            mesaj = "BERABERE (Push)";
-            drawbtn.SetActive(true);
-        }
-
-        Debug.Log(mesaj);
-
-        yield return new WaitForSeconds(elSonuBekleme);
-        YeniElBaslat();
-    }
-
-    IEnumerator ElBitirVeYenile(string mesaj)
-    {
-        KilitleButonlar();
-        Debug.Log(mesaj);
         yield return new WaitForSeconds(elSonuBekleme);
         YeniElBaslat();
     }

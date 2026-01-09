@@ -48,7 +48,7 @@ namespace TMPro.Examples
             m_TextInfo = m_TextComponent.textInfo;
 
             // Update Text Statistics
-            ObjectStats = "Characters: " + m_TextInfo.characterCount + "   Words: " + m_TextInfo.wordCount + "   Spaces: " + m_TextInfo.spaceCount + "   Sprites: " + m_TextInfo.spriteCount + "   Links: " + m_TextInfo.linkCount
+            ObjectStats = "Characters: " + m_TextInfo.characterCount + "   Words: " + m_TextInfo.wordCount + "   Spass: " + m_TextInfo.spaceCount + "   Sprites: " + m_TextInfo.spriteCount + "   Links: " + m_TextInfo.linkCount
                           + "\nLines: " + m_TextInfo.lineCount + "   Pages: " + m_TextInfo.pageCount;
 
             // Get the handle size for drawing the various
@@ -134,8 +134,8 @@ namespace TMPro.Examples
                 {
                     Color color = Color.grey;
 
-                    float whiteSpaceAdvance = Math.Abs(characterInfo.origin - characterInfo.xAdvance) > 0.01f ? characterInfo.xAdvance : characterInfo.origin + (characterInfo.ascender - characterInfo.descender) * 0.03f;
-                    DrawDottedRectangle(m_Transform.TransformPoint(new Vector3(characterInfo.origin, characterInfo.descender, 0)), m_Transform.TransformPoint(new Vector3(whiteSpaceAdvance, characterInfo.ascender, 0)), color, 4);
+                    float whiteSpasAdvance = Math.Abs(characterInfo.origin - characterInfo.xAdvance) > 0.01f ? characterInfo.xAdvance : characterInfo.origin + (characterInfo.ascender - characterInfo.descender) * 0.03f;
+                    DrawDottedRectangle(m_Transform.TransformPoint(new Vector3(characterInfo.origin, characterInfo.descender, 0)), m_Transform.TransformPoint(new Vector3(whiteSpasAdvance, characterInfo.ascender, 0)), color, 4);
                 }
 
                 float origin = characterInfo.origin;
@@ -144,7 +144,7 @@ namespace TMPro.Examples
                 float baseline = characterInfo.baseLine;
                 float descentline = characterInfo.descender;
 
-                //Draw Ascent line
+                //Draw ascent line
                 Vector3 ascentlineStart = m_Transform.TransformPoint(new Vector3(origin, ascentline, 0));
                 Vector3 ascentlineEnd = m_Transform.TransformPoint(new Vector3(advance, ascentline, 0));
 
@@ -212,11 +212,11 @@ namespace TMPro.Examples
                    //float meanlineMetrics = meanline - baseline;
                    //float descentlineMetrics = descentline - baseline;
 
-                   // Ascent Line
+                   // ascent Line
                    labelPosition = m_Transform.TransformPoint(new Vector3(center, ascentline, 0));
                    style.alignment = TextAnchor.UpperCenter;
-                   Handles.Label(labelPosition, "Ascent Line", style);
-                   //Handles.Label(labelPosition, "Ascent Line (" + ascentlineMetrics.ToString("f3") + ")" , style);
+                   Handles.Label(labelPosition, "ascent Line", style);
+                   //Handles.Label(labelPosition, "ascent Line (" + ascentlineMetrics.ToString("f3") + ")" , style);
 
                    // Base Line
                    labelPosition = m_Transform.TransformPoint(new Vector3(center, baseline, 0));
@@ -274,7 +274,7 @@ namespace TMPro.Examples
                 Vector3 bottomRight = Vector3.zero;
                 Vector3 topRight = Vector3.zero;
 
-                float maxAscender = -Mathf.Infinity;
+                float maxascender = -Mathf.Infinity;
                 float minDescender = Mathf.Infinity;
 
                 Color wordColor = Color.green;
@@ -290,8 +290,8 @@ namespace TMPro.Examples
                                               currentCharInfo.lineNumber > m_TextComponent.maxVisibleLines ||
                                              (m_TextComponent.overflowMode == TextOverflowModes.Page && currentCharInfo.pageNumber + 1 != m_TextComponent.pageToDisplay) ? false : true;
 
-                    // Track Max Ascender and Min Descender
-                    maxAscender = Mathf.Max(maxAscender, currentCharInfo.ascender);
+                    // Track Max ascender and Min Descender
+                    maxascender = Mathf.Max(maxascender, currentCharInfo.ascender);
                     minDescender = Mathf.Min(minDescender, currentCharInfo.descender);
 
                     if (isBeginRegion == false && isCharacterVisible)
@@ -308,10 +308,10 @@ namespace TMPro.Examples
                         {
                             isBeginRegion = false;
 
-                            topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                            topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                             bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                             bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                            topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                            topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                             // Draw Region
                             DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
@@ -325,10 +325,10 @@ namespace TMPro.Examples
                     {
                         isBeginRegion = false;
 
-                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                         bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                         bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
@@ -340,15 +340,15 @@ namespace TMPro.Examples
                     {
                         isBeginRegion = false;
 
-                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                         bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                         bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, wordColor);
                         //Debug.Log("End Word Region at [" + currentCharInfo.character + "]");
-                        maxAscender = -Mathf.Infinity;
+                        maxascender = -Mathf.Infinity;
                         minDescender = Mathf.Infinity;
 
                     }
@@ -380,7 +380,7 @@ namespace TMPro.Examples
                 Vector3 bottomRight = Vector3.zero;
                 Vector3 topRight = Vector3.zero;
 
-                float maxAscender = -Mathf.Infinity;
+                float maxascender = -Mathf.Infinity;
                 float minDescender = Mathf.Infinity;
 
                 Color32 linkColor = Color.cyan;
@@ -396,8 +396,8 @@ namespace TMPro.Examples
                                               currentCharInfo.lineNumber > m_TextComponent.maxVisibleLines ||
                                              (m_TextComponent.overflowMode == TextOverflowModes.Page && currentCharInfo.pageNumber + 1 != m_TextComponent.pageToDisplay) ? false : true;
 
-                    // Track Max Ascender and Min Descender
-                    maxAscender = Mathf.Max(maxAscender, currentCharInfo.ascender);
+                    // Track Max ascender and Min Descender
+                    maxascender = Mathf.Max(maxascender, currentCharInfo.ascender);
                     minDescender = Mathf.Min(minDescender, currentCharInfo.descender);
 
                     if (isBeginRegion == false && isCharacterVisible)
@@ -414,10 +414,10 @@ namespace TMPro.Examples
                         {
                             isBeginRegion = false;
 
-                            topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                            topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                             bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                             bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                            topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                            topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                             // Draw Region
                             DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, linkColor);
@@ -431,10 +431,10 @@ namespace TMPro.Examples
                     {
                         isBeginRegion = false;
 
-                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                         bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                         bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, linkColor);
@@ -446,15 +446,15 @@ namespace TMPro.Examples
                     {
                         isBeginRegion = false;
 
-                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxAscender, 0));
+                        topLeft = m_Transform.TransformPoint(new Vector3(topLeft.x, maxascender, 0));
                         bottomLeft = m_Transform.TransformPoint(new Vector3(bottomLeft.x, minDescender, 0));
                         bottomRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, minDescender, 0));
-                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxAscender, 0));
+                        topRight = m_Transform.TransformPoint(new Vector3(currentCharInfo.topRight.x, maxascender, 0));
 
                         // Draw Region
                         DrawRectangle(bottomLeft, topLeft, topRight, bottomRight, linkColor);
 
-                        maxAscender = -Mathf.Infinity;
+                        maxascender = -Mathf.Infinity;
                         minDescender = Mathf.Infinity;
                         //Debug.Log("End Word Region at [" + currentCharInfo.character + "]");
                     }
@@ -497,7 +497,7 @@ namespace TMPro.Examples
                 // Draw line extents
                 DrawDottedRectangle(m_Transform.TransformPoint(lineInfo.lineExtents.min), m_Transform.TransformPoint(lineInfo.lineExtents.max), Color.green, 4);
 
-                // Draw Ascent line
+                // Draw ascent line
                 Vector3 ascentlineStart = m_Transform.TransformPoint(new Vector3(lineBottomLeft, ascentline, 0));
                 Vector3 ascentlineEnd = m_Transform.TransformPoint(new Vector3(lineTopRight, ascentline, 0));
 
@@ -528,11 +528,11 @@ namespace TMPro.Examples
                     style.fixedHeight = 20;
                     Vector3 labelPosition;
 
-                    // Ascent Line
+                    // ascent Line
                     labelPosition = m_Transform.TransformPoint(new Vector3(lineBottomLeft, ascentline, 0));
                     style.padding = new RectOffset(0, 10, 0, 5);
                     style.alignment = TextAnchor.MiddleRight;
-                    Handles.Label(labelPosition, "Ascent Line", style);
+                    Handles.Label(labelPosition, "ascent Line", style);
 
                     // Base Line
                     labelPosition = m_Transform.TransformPoint(new Vector3(lineBottomLeft, baseline, 0));

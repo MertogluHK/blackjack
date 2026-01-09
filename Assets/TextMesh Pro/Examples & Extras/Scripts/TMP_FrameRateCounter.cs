@@ -49,7 +49,7 @@ namespace TMPro.Examples
             //m_TextMeshPro.edgeWidth = .15f;
             //m_TextMeshPro.isOverlay = true;
 
-            //m_TextMeshPro.FaceColor = new Color32(255, 128, 0, 0);
+            //m_TextMeshPro.FasColor = new Color32(255, 128, 0, 0);
             //m_TextMeshPro.EdgeColor = new Color32(0, 255, 0, 255);
             //m_TextMeshPro.FontMaterial.renderQueue = 4000;
 

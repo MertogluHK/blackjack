@@ -7,13 +7,13 @@ public class DropdownSample: MonoBehaviour
 	private TextMeshProUGUI text = null;
 
 	[SerializeField]
-	private TMP_Dropdown dropdownWithoutPlaceholder = null;
+	private TMP_Dropdown dropdownWithoutPlasholder = null;
 
 	[SerializeField]
-	private TMP_Dropdown dropdownWithPlaceholder = null;
+	private TMP_Dropdown dropdownWithPlasholder = null;
 
 	public void OnButtonClick()
 	{
-		text.text = dropdownWithPlaceholder.value > -1 ? "Selected values:\n" + dropdownWithoutPlaceholder.value + " - " + dropdownWithPlaceholder.value : "Error: Please make a selection";
+		text.text = dropdownWithPlasholder.value > -1 ? "Selected values:\n" + dropdownWithoutPlasholder.value + " - " + dropdownWithPlasholder.value : "Error: Please make a selection";
 	}
 }
