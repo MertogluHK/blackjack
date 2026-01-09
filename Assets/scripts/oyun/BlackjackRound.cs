@@ -22,6 +22,7 @@ public class BlackjackRound
         doubled.Clear();
         stood.Clear();
 
+        // ✅ TEK EL
         playerHands.Add(new El());
         bets.Add(baseBet);
         doubled.Add(false);
@@ -30,12 +31,12 @@ public class BlackjackRound
         activeHandIndex = 0;
     }
 
-    public void SetActiveHand(int i) => activeHandIndex = i;
+    public void SetActiveHand(int i) => activeHandIndex = 0; // her zaman 0
 
-    public Kart DealToPlayer(int handIndex)
+    public Kart DealToPlayer(int handIndex = 0)
     {
         Kart k = deck.Draw();
-        playerHands[handIndex].Ekle(k);
+        playerHands[0].Ekle(k);
         return k;
     }
 
@@ -46,106 +47,46 @@ public class BlackjackRound
         return k;
     }
 
-    public Kart Hit(int handIndex) => DealToPlayer(handIndex);
+    public Kart Hit(int handIndex = 0) => DealToPlayer(0);
 
-    public void Stand(int handIndex) => stood[handIndex] = true;
+    public void Stand(int handIndex = 0) => stood[0] = true;
 
-    public bool CanDoubleDown(int handIndex)
+    public bool CanDoubleDown(int handIndex = 0)
     {
-        var h = playerHands[handIndex];
-        return h.kartlar.Count == 2 && !doubled[handIndex] && !stood[handIndex];
+        var h = playerHands[0];
+        return h.kartlar.Count == 2 && !doubled[0] && !stood[0];
     }
 
-    public Kart DoubleDown(int handIndex)
+    public Kart DoubleDown(int handIndex = 0)
     {
-        if (!CanDoubleDown(handIndex)) return null;
+        if (!CanDoubleDown(0)) return null;
 
-        doubled[handIndex] = true;
-        bets[handIndex] *= 2;
+        doubled[0] = true;
+        bets[0] *= 2;
 
-        return Hit(handIndex);
+        return Hit(0);
     }
 
-    // değer bazlı split (10/J/Q/K hepsi 10)
-    public bool CanSplit(int handIndex)
+    public bool IsHandDone(int i = 0)
     {
-        var h = playerHands[handIndex];
-        if (h.kartlar.Count != 2) return false;
-        if (stood[handIndex]) return false;
-
-        return h.kartlar[0].Deger == h.kartlar[1].Deger;
-    }
-
-    public bool Split(int handIndex)
-    {
-        if (!CanSplit(handIndex)) return false;
-
-        var h = playerHands[handIndex];
-        Kart a = h.kartlar[0];
-        Kart b = h.kartlar[1];
-
-        h.kartlar.Clear();
-        h.Ekle(a);
-
-        El newHand = new El();
-        newHand.Ekle(b);
-
-        playerHands.Insert(handIndex + 1, newHand);
-
-        bets.Insert(handIndex + 1, bets[handIndex]);
-        doubled.Insert(handIndex + 1, false);
-        stood.Insert(handIndex + 1, false);
-
-        activeHandIndex = handIndex;
-        return true;
-    }
-
-    public bool IsHandDone(int i)
-    {
-        int s = playerHands[i].Skor();
+        int s = playerHands[0].Skor();
 
         if (s >= 21) return true;
-        if (stood[i]) return true;
-        if (doubled[i]) return true;
+        if (stood[0]) return true;
+        if (doubled[0]) return true;
 
         return false;
     }
 
-    public bool MoveToNextPlayableHand()
+    public HandResult ResolveHand(int handIndex = 0)
     {
-        for (int i = activeHandIndex + 1; i < playerHands.Count; i++)
-        {
-            if (!IsHandDone(i))
-            {
-                activeHandIndex = i;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public bool PlayerHasAnyBlackjackAtStart()
-    {
-        return playerHands.Count > 0 &&
-               playerHands[0].kartlar.Count == 2 &&
-               playerHands[0].Skor() == 21;
-    }
-
-    public bool DealerHasBlackjackAtStart()
-    {
-        return dealerHand.kartlar.Count == 2 &&
-               dealerHand.Skor() == 21;
-    }
-
-    public HandResult ResolveHand(int handIndex)
-    {
-        int p = playerHands[handIndex].Skor();
+        int p = playerHands[0].Skor();
         int d = dealerHand.Skor();
 
         bool pBust = p > 21;
         bool dBust = d > 21;
 
-        bool pBJ = playerHands[handIndex].kartlar.Count == 2 && p == 21;
+        bool pBJ = playerHands[0].kartlar.Count == 2 && p == 21;
         bool dBJ = dealerHand.kartlar.Count == 2 && d == 21;
 
         var res = new HandResult
