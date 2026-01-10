@@ -4,7 +4,10 @@ public class El
 {
     public List<Kart> kartlar = new List<Kart>();
 
-    public void Ekle(Kart k) => kartlar.Add(k);
+    public void Ekle(Kart k)
+    {
+        if (k != null) kartlar.Add(k);
+    }
 
     public int Skor()
     {
@@ -13,10 +16,13 @@ public class El
 
         foreach (var k in kartlar)
         {
+            if (k == null) continue;
+
             skor += k.Deger;
             if (k.Rank == CardRank.Ace) aceCount++;
         }
 
+        // Asları 11 -> 1'e düşür
         while (skor > 21 && aceCount > 0)
         {
             skor -= 10;

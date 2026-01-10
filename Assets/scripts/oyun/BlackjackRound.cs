@@ -1,42 +1,32 @@
-﻿using System.Collections.Generic;
-
-public class BlackjackRound
+﻿public class BlackjackRound
 {
     public Deste deck;
-    public List<El> playerHands = new List<El>();
+    public El playerHand = new El();
     public El dealerHand = new El();
 
-    public int activeHandIndex { get; private set; } = 0;
+    public int baseBet { get; private set; }
+    public int bet { get; private set; }
 
-    public List<int> bets = new List<int>();
-    public List<bool> doubled = new List<bool>();
-    public List<bool> stood = new List<bool>();
+    public bool doubled { get; private set; }
+    public bool stood { get; private set; }
 
     public BlackjackRound(int deckCount, int shuffleThreshold, int baseBet)
     {
         deck = new Deste(deckCount, shuffleThreshold);
+        playerHand = new El();
         dealerHand = new El();
 
-        playerHands.Clear();
-        bets.Clear();
-        doubled.Clear();
-        stood.Clear();
+        this.baseBet = baseBet;
+        bet = baseBet;
 
-        // ✅ TEK EL
-        playerHands.Add(new El());
-        bets.Add(baseBet);
-        doubled.Add(false);
-        stood.Add(false);
-
-        activeHandIndex = 0;
+        doubled = false;
+        stood = false;
     }
 
-    public void SetActiveHand(int i) => activeHandIndex = 0; // her zaman 0
-
-    public Kart DealToPlayer(int handIndex = 0)
+    public Kart DealToPlayer()
     {
         Kart k = deck.Draw();
-        playerHands[0].Ekle(k);
+        playerHand.Ekle(k);
         return k;
     }
 
@@ -47,47 +37,45 @@ public class BlackjackRound
         return k;
     }
 
-    public Kart Hit(int handIndex = 0) => DealToPlayer(0);
+    public Kart Hit() => DealToPlayer();
 
-    public void Stand(int handIndex = 0) => stood[0] = true;
+    public void Stand() => stood = true;
 
-    public bool CanDoubleDown(int handIndex = 0)
+    public bool CanDoubleDown()
     {
-        var h = playerHands[0];
-        return h.kartlar.Count == 2 && !doubled[0] && !stood[0];
+        return playerHand.kartlar.Count == 2 && !doubled && !stood;
     }
 
-    public Kart DoubleDown(int handIndex = 0)
+    public Kart DoubleDown()
     {
-        if (!CanDoubleDown(0)) return null;
-
-        doubled[0] = true;
-        bets[0] *= 2;
-
-        return Hit(0);
+        if (!CanDoubleDown()) return null;
+        doubled = true;
+        bet *= 2;
+        return Hit();
     }
 
-    public bool IsHandDone(int i = 0)
+    public bool IsPlayerDone()
     {
-        int s = playerHands[0].Skor();
-
+        int s = playerHand.Skor();
         if (s >= 21) return true;
-        if (stood[0]) return true;
-        if (doubled[0]) return true;
-
+        if (stood) return true;
+        if (doubled) return true;
         return false;
     }
 
-    public HandResult ResolveHand(int handIndex = 0)
+    public bool PlayerHasBlackjackAtStart()
+        => playerHand.kartlar.Count == 2 && playerHand.Skor() == 21;
+
+    public bool DealerHasBlackjackAtStart()
+        => dealerHand.kartlar.Count == 2 && dealerHand.Skor() == 21;
+
+    public HandResult Resolve()
     {
-        int p = playerHands[0].Skor();
+        int p = playerHand.Skor();
         int d = dealerHand.Skor();
 
         bool pBust = p > 21;
         bool dBust = d > 21;
-
-        bool pBJ = playerHands[0].kartlar.Count == 2 && p == 21;
-        bool dBJ = dealerHand.kartlar.Count == 2 && d == 21;
 
         var res = new HandResult
         {
@@ -95,41 +83,18 @@ public class BlackjackRound
             dealerScore = d,
             playerBust = pBust,
             dealerBust = dBust,
-            playerBlackjack = pBJ,
-            dealerBlackjack = dBJ,
+            playerBlackjack = (playerHand.kartlar.Count == 2 && p == 21),
+            dealerBlackjack = (dealerHand.kartlar.Count == 2 && d == 21),
             outcome = RoundOutcome.None,
             message = ""
         };
 
-        if (pBust)
-        {
-            res.outcome = RoundOutcome.DealerWin;
-            res.message = "LOSE (Bust)";
-            return res;
-        }
+        if (pBust) { res.outcome = RoundOutcome.DealerWin; res.message = "LOSE (Bust)"; return res; }
+        if (dBust) { res.outcome = RoundOutcome.PlayerWin; res.message = "WIN (Dealer bust)"; return res; }
 
-        if (dBust)
-        {
-            res.outcome = RoundOutcome.PlayerWin;
-            res.message = "WIN (Dealer bust)";
-            return res;
-        }
-
-        if (p > d)
-        {
-            res.outcome = RoundOutcome.PlayerWin;
-            res.message = "WIN";
-        }
-        else if (p < d)
-        {
-            res.outcome = RoundOutcome.DealerWin;
-            res.message = "LOSE";
-        }
-        else
-        {
-            res.outcome = RoundOutcome.Push;
-            res.message = "PUSH";
-        }
+        if (p > d) { res.outcome = RoundOutcome.PlayerWin; res.message = "WIN"; }
+        else if (p < d) { res.outcome = RoundOutcome.DealerWin; res.message = "LOSE"; }
+        else { res.outcome = RoundOutcome.Push; res.message = "PUSH"; }
 
         return res;
     }

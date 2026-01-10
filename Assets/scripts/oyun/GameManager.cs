@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     RoundState state = RoundState.Idle;
     bool inputLocked = false;
 
-    void SetActionButtons(bool hit, bool stand, bool dbl)
+    void SetButtons(bool hit, bool stand, bool dbl)
     {
         if (!ui) return;
         ui.SetActionButtons(hit, stand, dbl);
@@ -35,62 +35,115 @@ public class GameManager : MonoBehaviour
     {
         if (!ui || round == null || inputLocked || state != RoundState.PlayerTurn)
         {
-            SetActionButtons(false, false, false);
+            SetButtons(false, false, false);
             return;
         }
 
-        if (round.IsHandDone(0))
+        if (round.IsPlayerDone())
         {
-            SetActionButtons(false, false, false);
+            SetButtons(false, false, false);
             return;
         }
 
-        int score = round.playerHands[0].Skor();
+        int score = round.playerHand.Skor();
 
-        SetActionButtons(
+        SetButtons(
             hit: score < 21,
             stand: true,
-            dbl: round.CanDoubleDown(0)
+            dbl: round.CanDoubleDown()
         );
     }
 
+    void LockActions()
+    {
+        inputLocked = true;
+        state = RoundState.Idle;
+        SetButtons(false, false, false);
+    }
+
+    // UI Button -> OnClick bağla
     public void YeniElBaslat()
     {
         StopAllCoroutines();
 
         round = new BlackjackRound(desteSayisi, karistirEsigi, baseBet);
-
         state = RoundState.Dealing;
         inputLocked = true;
 
         if (ui)
         {
             ui.HideResults();
-            SetActionButtons(false, false, false);
+            SetButtons(false, false, false);
         }
 
-        if (presenter)
-        {
-            presenter.ClearAll();
-            presenter.EnsurePlayerHandAreas(1); // tek el
-        }
+        if (presenter) presenter.ClearAll();
 
         StartCoroutine(BaslangicDagitimi());
     }
 
+    IEnumerator BaslangicDagitimi()
+    {
+        // Player 1
+        var p1 = round.DealToPlayer();
+        if (presenter) presenter.ShowPlayerCard(p1);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Dealer 1
+        var d1 = round.DealToDealer();
+        if (presenter) presenter.ShowDealerCard(d1);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Player 2
+        var p2 = round.DealToPlayer();
+        if (presenter) presenter.ShowPlayerCard(p2);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Dealer 2
+        var d2 = round.DealToDealer();
+        if (presenter) presenter.ShowDealerCard(d2);
+        yield return new WaitForSeconds(kartCekmeGecikmesi);
+
+        // Blackjack kontrolü (başlangıç)
+        if (round.PlayerHasBlackjackAtStart() || round.DealerHasBlackjackAtStart())
+        {
+            LockActions();
+
+            int p = round.playerHand.Skor();
+            int d = round.dealerHand.Skor();
+
+            if (ui)
+            {
+                if (p == 21 && d == 21) ui.ShowOutcome(RoundOutcome.Push);
+                else if (p == 21) ui.ShowOutcome(RoundOutcome.PlayerWin);
+                else ui.ShowOutcome(RoundOutcome.DealerWin);
+            }
+
+            yield return new WaitForSeconds(elSonuBekleme);
+            YeniElBaslat();
+            yield break;
+        }
+
+        state = RoundState.PlayerTurn;
+        inputLocked = false;
+        RefreshButtons();
+    }
+
+    // HIT
     public void Hit()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
 
-        var card = round.Hit(0);
-        presenter.ShowPlayerCard(0, card);
+        var c = round.Hit();
+        if (presenter) presenter.ShowPlayerCard(c);
 
-        int p = round.playerHands[0].Skor();
+        int p = round.playerHand.Skor();
 
         if (p > 21)
         {
-            round.Stand(0);
-            StartDealerTurn();
+            // Bust -> dealer oynatmaya gerek yok, direkt sonuç
+            LockActions();
+            if (ui) ui.ShowOutcome(RoundOutcome.DealerWin);
+            StartCoroutine(NextHandAfterDelay());
             return;
         }
 
@@ -103,24 +156,31 @@ public class GameManager : MonoBehaviour
         RefreshButtons();
     }
 
+    IEnumerator NextHandAfterDelay()
+    {
+        yield return new WaitForSeconds(elSonuBekleme);
+        YeniElBaslat();
+    }
+
+    // STAND
     public void Stand()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
 
-        round.Stand(0);
+        round.Stand();
         StartDealerTurn();
     }
 
+    // DOUBLE
     public void DoubleDown()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
-        if (!round.CanDoubleDown(0)) return;
+        if (!round.CanDoubleDown()) return;
 
-        var card = round.DoubleDown(0);
-        presenter.ShowPlayerCard(0, card);
+        var c = round.DoubleDown();
+        if (presenter && c != null) presenter.ShowPlayerCard(c);
 
-        // double biter
-        round.Stand(0);
+        round.Stand();
         StartDealerTurn();
     }
 
@@ -132,39 +192,18 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DealerOynasinVeSonuc());
     }
 
-    IEnumerator BaslangicDagitimi()
-    {
-        // Player 1
-        presenter.ShowPlayerCard(0, round.DealToPlayer(0));
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        // Dealer 1
-        presenter.ShowDealerCard(round.DealToDealer());
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        // Player 2
-        presenter.ShowPlayerCard(0, round.DealToPlayer(0));
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        // Dealer 2
-        presenter.ShowDealerCard(round.DealToDealer());
-        yield return new WaitForSeconds(kartCekmeGecikmesi);
-
-        state = RoundState.PlayerTurn;
-        inputLocked = false;
-        RefreshButtons();
-    }
-
     IEnumerator DealerOynasinVeSonuc()
     {
         while (dealerAI.ShouldHit(round.dealerHand, dealerHitsSoft17))
         {
             var c = round.DealToDealer();
-            presenter.ShowDealerCard(c);
+            if (presenter) presenter.ShowDealerCard(c);
             yield return new WaitForSeconds(kartCekmeGecikmesi);
         }
 
-        var res = round.ResolveHand(0);
+        state = RoundState.Resolving;
+
+        var res = round.Resolve();
         if (ui) ui.ShowOutcome(res.outcome);
 
         yield return new WaitForSeconds(elSonuBekleme);

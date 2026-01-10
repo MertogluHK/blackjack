@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Deste
 {
-    List<Kart> kartlar = new List<Kart>();
+    readonly List<Kart> kartlar = new List<Kart>();
 
     int deckCount;
     int shuffleThreshold;
@@ -31,7 +31,9 @@ public class Deste
         }
 
         Shuffle();
+#if UNITY_EDITOR
         Debug.Log($"[DECK] {deckCount} decks, {kartlar.Count} cards.");
+#endif
     }
 
     void Shuffle()
@@ -48,8 +50,10 @@ public class Deste
         if (kartlar.Count <= shuffleThreshold)
             RebuildAndShuffle();
 
-        Kart k = kartlar[0];
-        kartlar.RemoveAt(0);
+        // O(1) çekmek için sondan çekebiliriz:
+        int last = kartlar.Count - 1;
+        Kart k = kartlar[last];
+        kartlar.RemoveAt(last);
         return k;
     }
 }

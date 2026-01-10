@@ -5,7 +5,8 @@ public class UIController : MonoBehaviour
     [Header("Action Buttons")]
     public GameObject hitbtn;
     public GameObject standbtn;
-    public GameObject doublebtn; // split kaldırıldı
+    public GameObject splitbtn;
+    public GameObject doublebtn;
 
     [Header("Result Buttons/Panels")]
     public GameObject pwinbtn;
@@ -24,6 +25,9 @@ public class UIController : MonoBehaviour
         if (hitbtn) hitbtn.SetActive(hit);
         if (standbtn) standbtn.SetActive(stand);
         if (doublebtn) doublebtn.SetActive(dbl);
+
+        // Split şu an sistemde yok/yarım: test sırasında açık kalıp bozmasın diye kapalı tut.
+        if (splitbtn) splitbtn.SetActive(false);
     }
 
     public void ShowOutcome(RoundOutcome outcome)

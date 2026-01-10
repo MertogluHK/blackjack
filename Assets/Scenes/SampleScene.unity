@@ -1521,6 +1521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIController
   hitbtn: {fileID: 1555365220}
   standbtn: {fileID: 1487931352}
+  splitbtn: {fileID: 330544840}
   doublebtn: {fileID: 2014050039}
   pwinbtn: {fileID: 909067573}
   dwinbtn: {fileID: 739657247}
@@ -4915,7 +4916,7 @@ RectTransform:
   - {fileID: 432865841}
   - {fileID: 909067574}
   - {fileID: 739657248}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1977062919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4985,41 +4986,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &1435143452
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1435143453}
-  m_Layer: 0
-  m_Name: HandsContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1435143453
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1435143452}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1765060494}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 144}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1461849729
 GameObject:
   m_ObjectHideFlags: 0
@@ -5541,14 +5507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9cd0148670747459da2d0bb6075652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardPresenter
-  playerHandsRoot: {fileID: 1765060494}
-  handsContainer: {fileID: 1435143453}
+  playerCardsParent: {fileID: 1765060494}
   dealerCardsParent: {fileID: 1475828880}
   cardPrefab: {fileID: 4136164900250061483, guid: 64d47743575a2c049a81832499dece0f, type: 3}
-  handStepX: 250
-  handY: 0
-  splitShiftX: 85
-  firstWidth: 100
   step: 55
   stackYOffset: 15
 --- !u!4 &1540441362
@@ -6212,8 +6173,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1435143453}
+  m_Children: []
   m_Father: {fileID: 1977062919}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -6947,6 +6907,7 @@ RectTransform:
   - {fileID: 330544841}
   - {fileID: 2014050040}
   - {fileID: 427007838}
+  - {fileID: 1431903037}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7415,7 +7376,6 @@ SceneRoots:
   - {fileID: 1089326112}
   - {fileID: 1835558250}
   - {fileID: 1977062919}
-  - {fileID: 1431903037}
   - {fileID: 2041262718}
   - {fileID: 125379330}
   - {fileID: 423583426}
