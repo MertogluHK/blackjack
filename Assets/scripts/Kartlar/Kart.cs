@@ -5,6 +5,7 @@
 
 public enum CardRank
 {
+    Two, Three, Four, Five, Six, Seven, Eight, 
     Ten, Jack, Queen, King, Ace
 }
 
@@ -25,7 +26,7 @@ public class Kart
         {
             // as her zaman 11 olarak başlar
             if (Rank == CardRank.Ace)
-                return 10;
+                return 11;
 
             // 10, Jack, Kız, King → 10
             if (Rank == CardRank.Ten ||

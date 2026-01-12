@@ -6,6 +6,9 @@ public class PlayerCardImage : MonoBehaviour
 {
     public Image image;
 
+    [Header("Optional")]
+    public Sprite backSprite; // kart arkası sprite (Inspector'dan ver)
+
     static readonly Dictionary<string, Sprite> cache = new Dictionary<string, Sprite>();
 
     public void Goster(Kart kart)
@@ -26,5 +29,17 @@ public class PlayerCardImage : MonoBehaviour
         }
 
         image.sprite = sprite;
+    }
+
+    // Dealer kapalı kart için
+    public void GosterKapali()
+    {
+        if (!image || !backSprite) return;
+        image.sprite = backSprite;
+    }
+
+    public void Ac(Kart kart)
+    {
+        Goster(kart);
     }
 }

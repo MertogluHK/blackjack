@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -19,38 +20,60 @@ public class GameManager : MonoBehaviour
     [Header("Dealer Rules")]
     public bool dealerHitsSoft17 = false;
 
+    [Header("Hand Arrows")]
+    public GameObject Hand1;
+    public GameObject Hand2;
+    public GameObject Hand3;
+
     BlackjackRound round;
     DealerAI dealerAI = new DealerAI();
 
     RoundState state = RoundState.Idle;
     bool inputLocked = false;
+    int standCount = 0;
 
-    void SetButtons(bool hit, bool stand, bool dbl)
+    // ✅ Dealer BJ olsa bile hemen bitirmemek için
+    bool dealerBlackjackPending = false;
+
+    int PlayerSlotForHand(int handIndex)
+    {
+        if (round != null && round.IsSplit)
+            return handIndex == 0 ? 1 : 2;
+
+        return 0;
+    }
+
+    void SetButtons(bool hit, bool stand, bool split, bool dbl)
     {
         if (!ui) return;
-        ui.SetActionButtons(hit, stand, dbl);
+        ui.SetActionButtons(hit, stand, split, dbl);
     }
 
     void RefreshButtons()
     {
         if (!ui || round == null || inputLocked || state != RoundState.PlayerTurn)
         {
-            SetButtons(false, false, false);
+            SetButtons(false, false, false, false);
             return;
         }
 
-        if (round.IsPlayerDone())
+        if (round.IsActiveHandDone())
         {
-            SetButtons(false, false, false);
+            SetButtons(false, false, false, false);
             return;
         }
 
-        int score = round.playerHand.Skor();
+        int score = round.ActiveHand.Skor();
+
+        // ✅ Dealer BJ pending ise split/double kapat (istersen açabilirsin ama blackjack oyunlarında mantıklı değil)
+        bool allowSplit = !dealerBlackjackPending && round.CanSplit();
+        bool allowDbl = !dealerBlackjackPending && round.CanDoubleDown();
 
         SetButtons(
             hit: score < 21,
             stand: true,
-            dbl: round.CanDoubleDown()
+            split: allowSplit,
+            dbl: allowDbl
         );
     }
 
@@ -58,13 +81,19 @@ public class GameManager : MonoBehaviour
     {
         inputLocked = true;
         state = RoundState.Idle;
-        SetButtons(false, false, false);
+        SetButtons(false, false, false, false);
     }
 
-    // UI Button -> OnClick bağla
     public void YeniElBaslat()
     {
         StopAllCoroutines();
+        standCount = 0;
+
+        dealerBlackjackPending = false;
+
+        Hand2.SetActive(false);
+        Hand3.SetActive(false);
+        Hand1.SetActive(false);
 
         round = new BlackjackRound(desteSayisi, karistirEsigi, baseBet);
         state = RoundState.Dealing;
@@ -73,114 +102,183 @@ public class GameManager : MonoBehaviour
         if (ui)
         {
             ui.HideResults();
-            SetButtons(false, false, false);
+            ui.RestorePreSplitButtonPositions();
+            SetButtons(false, false, false, false);
         }
 
         if (presenter) presenter.ClearAll();
 
-        StartCoroutine(BaslangicDagitimi());
+        Hand1.SetActive(true);
+        StartCoroutine(YeniElVeDagit());
+    }
+
+    IEnumerator YeniElVeDagit()
+    {
+        yield return null;
+        yield return BaslangicDagitimi();
     }
 
     IEnumerator BaslangicDagitimi()
     {
-        // Player 1
-        var p1 = round.DealToPlayer();
-        if (presenter) presenter.ShowPlayerCard(p1);
+        var p1 = round.DealToPlayer(0);
+        if (presenter) presenter.ShowPlayerCard(0, p1);
         yield return new WaitForSeconds(kartCekmeGecikmesi);
 
-        // Dealer 1
+        // ✅ Dealer ilk kart kapalı
         var d1 = round.DealToDealer();
-        if (presenter) presenter.ShowDealerCard(d1);
+        if (presenter) presenter.ShowDealerCardHidden(d1);
         yield return new WaitForSeconds(kartCekmeGecikmesi);
 
-        // Player 2
-        var p2 = round.DealToPlayer();
-        if (presenter) presenter.ShowPlayerCard(p2);
+        var p2 = round.DealToPlayer(0);
+        if (presenter) presenter.ShowPlayerCard(0, p2);
         yield return new WaitForSeconds(kartCekmeGecikmesi);
 
-        // Dealer 2
         var d2 = round.DealToDealer();
         if (presenter) presenter.ShowDealerCard(d2);
         yield return new WaitForSeconds(kartCekmeGecikmesi);
 
-        // Blackjack kontrolü (başlangıç)
-        if (round.PlayerHasBlackjackAtStart() || round.DealerHasBlackjackAtStart())
+        bool pBJ = round.PlayerHasBlackjackAtStart();
+        bool dBJ = round.DealerHasBlackjackAtStart();
+
+        // ✅ Player BJ, dealer BJ değilse: istersen anında bitir
+        if (pBJ && !dBJ)
         {
+            // dealer kartını açmak istersen burada açabilirsin (opsiyonel)
+            if (presenter) presenter.RevealDealerFirstCard(round.dealerHand.kartlar[0]);
+
             LockActions();
-
-            int p = round.playerHand.Skor();
-            int d = round.dealerHand.Skor();
-
-            if (ui)
-            {
-                if (p == 21 && d == 21) ui.ShowOutcome(RoundOutcome.Push);
-                else if (p == 21) ui.ShowOutcome(RoundOutcome.PlayerWin);
-                else ui.ShowOutcome(RoundOutcome.DealerWin);
-            }
+            if (ui) ui.ShowOutcome(RoundOutcome.PlayerBlackjackWin);
 
             yield return new WaitForSeconds(elSonuBekleme);
             YeniElBaslat();
             yield break;
         }
 
+        // ✅ Dealer BJ varsa: HEMEN BİTİRME
+        if (dBJ)
+        {
+            dealerBlackjackPending = true;
+
+            state = RoundState.PlayerTurn;
+            inputLocked = false;
+
+            // player da BJ ise player turu gereksiz -> direkt dealer turu (kartı açıp resolve edecek)
+            if (pBJ)
+            {
+                StartDealerTurn();
+                yield break;
+            }
+
+            RefreshButtons();
+            yield break;
+        }
+
+        // normal akış
         state = RoundState.PlayerTurn;
         inputLocked = false;
         RefreshButtons();
     }
 
-    // HIT
+    // SPLIT
+    public void Split()
+    {
+        Hand1.SetActive(false);
+        Hand2.SetActive(true);
+
+        if (inputLocked || state != RoundState.PlayerTurn) return;
+        if (dealerBlackjackPending) return; // ✅ dealer BJ pending iken split yok
+        if (!round.CanSplit()) return;
+
+        round.Split();
+
+        if (ui) ui.ApplySplitButtonPositions();
+
+        if (presenter)
+        {
+            presenter.ClearAll();
+
+            // ✅ dealer kartları tekrar basılırken ilk kart yine kapalı olmalı
+            // dealerhand[0] kapalı, [1] açık:
+            if (round.dealerHand.kartlar.Count > 0) presenter.ShowDealerCardHidden(round.dealerHand.kartlar[0]);
+            if (round.dealerHand.kartlar.Count > 1) presenter.ShowDealerCard(round.dealerHand.kartlar[1]);
+
+            foreach (var k in round.playerHand1.kartlar)
+                presenter.ShowPlayerCard(1, k);
+
+            foreach (var k in round.playerHand2.kartlar)
+                presenter.ShowPlayerCard(2, k);
+        }
+
+        var c1 = round.DealToPlayer(0);
+        if (presenter) presenter.ShowPlayerCard(1, c1);
+
+        var c2 = round.DealToPlayer(1);
+        if (presenter) presenter.ShowPlayerCard(2, c2);
+
+        RefreshButtons();
+    }
+
     public void Hit()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
 
         var c = round.Hit();
-        if (presenter) presenter.ShowPlayerCard(c);
+        if (presenter)
+            presenter.ShowPlayerCard(PlayerSlotForHand(round.activeHandIndex), c);
 
-        int p = round.playerHand.Skor();
-
-        if (p > 21)
+        if (round.IsActiveHandDone())
         {
-            // Bust -> dealer oynatmaya gerek yok, direkt sonuç
-            LockActions();
-            if (ui) ui.ShowOutcome(RoundOutcome.DealerWin);
-            StartCoroutine(NextHandAfterDelay());
-            return;
-        }
-
-        if (p == 21)
-        {
-            Stand();
+            OnActiveHandFinished();
             return;
         }
 
         RefreshButtons();
     }
 
-    IEnumerator NextHandAfterDelay()
-    {
-        yield return new WaitForSeconds(elSonuBekleme);
-        YeniElBaslat();
-    }
-
-    // STAND
     public void Stand()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
 
+        if (standCount == 0 && round.IsSplit)
+        {
+            Hand1.SetActive(false);
+            Hand2.SetActive(false);
+            Hand3.SetActive(true);
+        }
+        else
+        {
+            Hand1.SetActive(false);
+            Hand2.SetActive(false);
+            Hand3.SetActive(false);
+        }
+
+        standCount++;
         round.Stand();
-        StartDealerTurn();
+        OnActiveHandFinished();
     }
 
-    // DOUBLE
     public void DoubleDown()
     {
         if (inputLocked || state != RoundState.PlayerTurn) return;
+        if (dealerBlackjackPending) return; // ✅ dealer BJ pending iken double yok
         if (!round.CanDoubleDown()) return;
 
         var c = round.DoubleDown();
-        if (presenter && c != null) presenter.ShowPlayerCard(c);
+        if (presenter && c != null)
+            presenter.ShowPlayerCard(PlayerSlotForHand(round.activeHandIndex), c);
 
         round.Stand();
+        OnActiveHandFinished();
+    }
+
+    void OnActiveHandFinished()
+    {
+        if (round.AdvanceToNextHandIfAny())
+        {
+            RefreshButtons();
+            return;
+        }
+
         StartDealerTurn();
     }
 
@@ -189,6 +287,11 @@ public class GameManager : MonoBehaviour
         inputLocked = true;
         state = RoundState.DealerTurn;
         RefreshButtons();
+
+        // ✅ Dealer kapalı kartı burada aç
+        if (presenter && round.dealerHand.kartlar.Count > 0)
+            presenter.RevealDealerFirstCard(round.dealerHand.kartlar[0]);
+
         StartCoroutine(DealerOynasinVeSonuc());
     }
 

@@ -3,17 +3,22 @@
 public class CardPresenter : MonoBehaviour
 {
     [Header("Roots")]
-    public RectTransform playerCardsParent;   // PlayerCards (RectTransform)
+    public RectTransform playerHand1Parent;   // Split yokken / hand1
+    public RectTransform playerHand2Parent;   // Split sonrası 1. el
+    public RectTransform playerHand3Parent;   // Split sonrası 2. el
     public Transform dealerCardsParent;       // DealerCards
+
     public GameObject cardPrefab;
 
     [Header("Player Layout")]
-    public float step = 45f;          // X aralığı (merkezleme için)
-    public float stackYOffset = 15f;  // her yeni kartın Y kayması
+    public float step = 45f;
+    public float stackYOffset = 15f;
 
     public void ClearAll()
     {
-        ClearChildren(playerCardsParent);
+        ClearChildren(playerHand1Parent);
+        ClearChildren(playerHand2Parent);
+        ClearChildren(playerHand3Parent);
         ClearChildren(dealerCardsParent);
     }
 
@@ -24,15 +29,28 @@ public class CardPresenter : MonoBehaviour
             Destroy(parent.GetChild(i).gameObject);
     }
 
-    public void ShowPlayerCard(Kart kart)
+    /// <summary>
+    /// slotIndex:
+    /// 0 = hand1
+    /// 1 = hand2
+    /// 2 = hand3
+    /// </summary>
+    public void ShowPlayerCard(int slotIndex, Kart kart)
     {
-        if (!playerCardsParent || kart == null) return;
+        if (kart == null) return;
 
-        RectTransform rt = SpawnCard(playerCardsParent, kart);
+        RectTransform parent =
+            slotIndex == 0 ? playerHand1Parent :
+            slotIndex == 1 ? playerHand2Parent :
+            playerHand3Parent;
+
+        if (!parent) return;
+
+        RectTransform rt = SpawnCard(parent, kart);
         if (!rt) return;
 
         rt.SetAsLastSibling();
-        CenterStackPlayerCards();
+        CenterStackPlayerCards(parent);
     }
 
     public void ShowDealerCard(Kart kart)
@@ -45,9 +63,35 @@ public class CardPresenter : MonoBehaviour
         rt.SetAsLastSibling();
     }
 
-    void CenterStackPlayerCards()
+    // ✅ Dealer ilk kart kapalı
+    public void ShowDealerCardHidden(Kart kart)
     {
-        int n = playerCardsParent.childCount;
+        if (!dealerCardsParent || kart == null) return;
+
+        RectTransform rt = SpawnCard(dealerCardsParent, kart);
+        if (!rt) return;
+
+        var view = rt.GetComponent<PlayerCardImage>();
+        if (view) view.GosterKapali();
+
+        rt.SetAsLastSibling();
+    }
+
+    // ✅ Dealer kapalı kartı aç
+    public void RevealDealerFirstCard(Kart realCard)
+    {
+        if (!dealerCardsParent) return;
+        if (dealerCardsParent.childCount <= 0) return;
+
+        var first = dealerCardsParent.GetChild(0);
+        var view = first.GetComponent<PlayerCardImage>();
+        if (view) view.Ac(realCard);
+    }
+
+    // 🔒 KONUM KODU SADECE BURADA
+    void CenterStackPlayerCards(RectTransform parent)
+    {
+        int n = parent.childCount;
         if (n == 0) return;
 
         float total = (n - 1) * step;
@@ -55,7 +99,7 @@ public class CardPresenter : MonoBehaviour
 
         for (int i = 0; i < n; i++)
         {
-            var cardRt = playerCardsParent.GetChild(i) as RectTransform;
+            RectTransform cardRt = parent.GetChild(i) as RectTransform;
             if (!cardRt) continue;
 
             float x = startX + i * step;
@@ -68,19 +112,15 @@ public class CardPresenter : MonoBehaviour
     {
         if (!cardPrefab || !parent || kart == null) return null;
 
-        // Parent ile instantiate: UI için daha stabil
-        GameObject obj = Object.Instantiate(cardPrefab, parent, false);
-
+        GameObject obj = Instantiate(cardPrefab);
         var rt = obj.GetComponent<RectTransform>();
-        if (!rt) { Object.Destroy(obj); return null; }
+        if (!rt)
+        {
+            Destroy(obj);
+            return null;
+        }
 
-        rt.anchorMin = new Vector2(0.5f, 0.5f);
-        rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.pivot = new Vector2(0.5f, 0.5f);
-
-        rt.localScale = Vector3.one;
-        rt.localRotation = Quaternion.identity;
-        rt.anchoredPosition = Vector2.zero;
+        obj.transform.SetParent(parent, false);
 
         var view = obj.GetComponent<PlayerCardImage>();
         if (view) view.Goster(kart);

@@ -12,7 +12,27 @@ public enum RoundOutcome
     None,
     PlayerWin,
     DealerWin,
-    Push
+    Push,
+    PlayerBlackjackWin
+}
+public enum HandOutcome
+{
+    Lose,
+    Push,
+    Win
+}
+
+public class SplitHandResult
+{
+    public HandOutcome hand1Outcome;
+    public HandOutcome hand2Outcome;
+
+    public int hand1Score;
+    public int hand2Score;
+    public int dealerScore;
+
+    public bool dealerBust;
+    public string message;
 }
 
 public class HandResult

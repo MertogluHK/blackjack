@@ -89,3 +89,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCardImage
   image: {fileID: 1196911264423275941}
+  backSprite: {fileID: 21300000, guid: 14127f26d5f8b3f4482c0407bf17958d, type: 3}
